@@ -1,0 +1,22 @@
+# gui/gui_deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gui-app
+  namespace: sagin-network
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gui-app
+  template:
+    metadata:
+      labels:
+        app: gui-app
+    spec:
+      containers:
+      - name: gui-app
+        image: gui_app:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 5000

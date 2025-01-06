@@ -1,0 +1,14 @@
+# gui/gui_service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: gui-service
+  namespace: sagin-network
+spec:
+  selector:
+    app: gui-app
+  ports:
+  - port: 5000
+    targetPort: 5000
+    protocol: TCP
+  type: NodePort
