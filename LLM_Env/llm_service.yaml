@@ -1,0 +1,14 @@
+# llm_translation_engine/llm_service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: llm-service
+  namespace: sagin-network
+spec:
+  selector:
+    app: llm-translation-engine
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+  type: ClusterIP
