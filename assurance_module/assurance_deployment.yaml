@@ -1,0 +1,22 @@
+#assurance_deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: assurance-module
+  namespace: sagin-network
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: assurance-module
+  template:
+    metadata:
+      labels:
+        app: assurance-module
+    spec:
+      serviceAccountName: assurance-sa
+      containers:
+      - name: assurance-module
+        image: assurance_module:latest
+        imagePullPolicy: Never
+
