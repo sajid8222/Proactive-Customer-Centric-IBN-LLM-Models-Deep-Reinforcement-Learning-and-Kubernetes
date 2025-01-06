@@ -1,8 +1,4 @@
 
-
-Here is a README file for your project:
-
-```markdown
 # Proactive-Customer-Centric-IBN-LLM-Models-Deep-Reinforcement-Learning-and-Kubernetes
 
 ## Overview
