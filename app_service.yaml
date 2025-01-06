@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: customer-a-service
+  namespace: customer-a
+spec:
+  selector:
+    app: customer-a-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: ClusterIP
+

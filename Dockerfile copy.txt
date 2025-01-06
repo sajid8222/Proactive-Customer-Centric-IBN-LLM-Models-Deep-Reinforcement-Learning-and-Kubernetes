@@ -1,0 +1,148 @@
+# Use Ubuntu 20.04 LTS as the base image
+FROM ubuntu:20.04
+
+# Prevent interactive prompts during package installations
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Enable universe and multiverse repositories, update package lists, and install essential packages
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends software-properties-common && \
+    add-apt-repository universe && \
+    add-apt-repository multiverse && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        build-essential \
+        cmake \
+        git \
+        mercurial \
+        gcc \
+        g++ \
+        vim \
+        python3 \
+        python3-pip \
+        python3-venv \
+        python3-dev \
+        python3-setuptools \
+        qt5-default \
+        python3-pygraphviz \
+        python3-kiwi \
+        python3-pygoocanvas \
+        libgoocanvas-dev \
+        ipython3 \
+        autoconf \
+        cvs \
+        bzr \
+        unrar \
+        gdb \
+        valgrind \
+        uncrustify \
+        flex \
+        bison \
+        libfl-dev \
+        tcpdump \
+        gsl-bin \
+        libgsl-dev \
+        libsqlite3-dev \
+        libxml2-dev \
+        cmake \
+        libc6-dev \
+        libclang-dev \
+        llvm-dev \
+        automake \
+        libgtk2.0-0 \
+        libgtk2.0-dev \
+        vtun \
+        lxc \
+        libboost-signals2-dev \
+        libboost-filesystem-dev \
+        libjsoncpp-dev \
+        && rm -rf /var/lib/apt/lists/*
+
+# Install Rust and Cargo via rustup (required for some Python packages)
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl && \
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
+    rm -rf /var/lib/apt/lists/*
+
+# Add Cargo to PATH
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+# Set working directory
+WORKDIR /usr/ns3
+
+# Download, extract, and remove ns-allinone-3.38.tar.bz2
+RUN wget https://www.nsnam.org/release/ns-allinone-3.38.tar.bz2 && \
+    tar -xjf ns-allinone-3.38.tar.bz2 && \
+    rm ns-allinone-3.38.tar.bz2
+
+# Set working directory to ns-3.38
+WORKDIR /usr/ns3/ns-allinone-3.38/ns-3.38/
+
+# Copy your custom simulation script into src/core/
+COPY sagin_simulation.cc src/core/
+
+# Ensure src/core/model/ directory exists
+RUN mkdir -p src/core/model/
+
+# Install nlohmann/json for JSON parsing in C++
+RUN wget https://github.com/nlohmann/json/releases/download/v3.11.2/json.hpp -P src/core/model/
+
+# Modify src/core/CMakeLists.txt to include sagin_simulation executable
+RUN echo "\
+# Add your simulation executable\n\
+add_executable(sagin_simulation src/core/sagin_simulation.cc)\n\
+\n\
+# Link necessary ns-3 modules using modern CMake target names\n\
+target_link_libraries(sagin_simulation\n\
+  PRIVATE\n\
+    ns3::core\n\
+    ns3::network\n\
+    ns3::internet\n\
+    ns3::point-to-point\n\
+    ns3::mobility\n\
+    ns3::applications\n\
+    ns3::netanim\n\
+    ns3::flow-monitor\n\
+)\n\
+\n\
+# Install the executable to the 'bin' directory\n\
+install(TARGETS sagin_simulation DESTINATION bin)\n\
+" >> src/core/CMakeLists.txt
+
+# Set up Python virtual environments
+RUN python3 -m venv /opt/llm_env && \
+    python3 -m venv /opt/gui_env
+
+# Upgrade pip and install Python packages for LLM Translation Engine
+RUN /opt/llm_env/bin/pip install --upgrade pip && \
+    /opt/llm_env/bin/pip install flask requests torch transformers
+
+# Upgrade pip and install Python packages for GUI
+RUN /opt/gui_env/bin/pip install --upgrade pip && \
+    /opt/gui_env/bin/pip install flask requests
+
+# Create directories for Python scripts and resources
+RUN mkdir -p /usr/ns3/ns-allinone-3.38/ns-3.38/scripts /usr/ns3/ns-allinone-3.38/ns-3.38/resources
+
+# Copy Python integration scripts and resources into the container
+COPY scripts/ /usr/ns3/ns-allinone-3.38/ns-3.38/scripts/
+COPY resources/ /usr/ns3/ns-allinone-3.38/ns-3.38/resources/
+
+# Copy the run_system.sh script into the container
+COPY run_system.sh /usr/ns3/ns-allinone-3.38/ns-3.38/
+
+# Make the run_system.sh script executable
+RUN chmod +x /usr/ns3/ns-allinone-3.38/ns-3.38/run_system.sh
+
+# Expose necessary ports for Flask APIs and GUI
+EXPOSE 5000 8080 8000
+
+# Set the entrypoint to the run_system.sh script
+ENTRYPOINT ["/usr/ns3/ns-allinone-3.38/ns-3.38/run_system.sh"]
+
+# Create a symbolic link for easier access
+RUN ln -s /usr/ns3/ns-allinone-3.38/ns-3.38/ /usr/ns3/
+
+# Clean up to reduce image size
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /usr/ns3/ns-allinone-3.38/ns-allinone-3.38.tar.bz2
