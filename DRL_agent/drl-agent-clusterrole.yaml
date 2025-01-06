@@ -1,0 +1,23 @@
+# drl_agent/drl_agent_clusterrole.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: drl-agent-role
+rules:
+- apiGroups: [""]
+  resources:
+    - pods
+    - nodes
+  verbs:
+    - get
+    - list
+    - watch
+- apiGroups: ["apps"]
+  resources:
+    - deployments
+  verbs:
+    - get
+    - list
+    - watch
+    - patch
+    - update

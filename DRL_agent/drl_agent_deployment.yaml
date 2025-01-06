@@ -1,0 +1,29 @@
+# drl_agent/drl_agent_deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: drl-agent
+  namespace: sagin-network
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: drl-agent
+  template:
+    metadata:
+      labels:
+        app: drl-agent
+    spec:
+      serviceAccountName: drl-agent-sa
+      containers:
+      - name: drl-agent
+        image: drl_agent:latest
+        imagePullPolicy: Never
+        # Uncomment and set resource limits if needed
+        # resources:
+        #   requests:
+        #     cpu: "500m"
+        #     memory: "512Mi"
+        #   limits:
+        #     cpu: "1"
+        #     memory: "1Gi"
