@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customer-a-app
+  namespace: customer-a
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: customer-a-app
+  template:
+    metadata:
+      labels:
+        app: customer-a-app
+    spec:
+      containers:
+      - name: customer-a-app
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+
