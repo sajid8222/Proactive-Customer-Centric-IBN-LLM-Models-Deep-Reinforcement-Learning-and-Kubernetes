@@ -1,3 +1,4 @@
+
 # Proactive-Customer-Centric-IBN-LLM-Models-Deep-Reinforcement-Learning-and-Kubernetes
 
 ## Overview
@@ -49,41 +50,50 @@ This project integrates advanced technologies to optimize resource management in
 1. Clone the repository:
    ```bash
    git clone https://github.com/your-repo/Proactive-Customer-Centric-IBN-LLM-Models-Deep-Reinforcement-Learning-and-Kubernetes.git
-Navigate to the project directory:
-bash
-Copy code
-cd Proactive-Customer-Centric-IBN-LLM-Models-Deep-Reinforcement-Learning-and-Kubernetes
-Set up the Kubernetes cluster and install Prometheus and Grafana.
-Install dependencies:
-bash
-Copy code
-pip install -r requirements.txt
-Deploy the application:
-bash
-Copy code
-kubectl apply -f app_deployment.yaml
-kubectl apply -f app_service.yaml
-Usage
-Start the application.
-Access the GUI to submit user intents.
-Monitor the system performance via Grafana dashboards.
-Observe the dynamic resource adjustments and system adaptations.
-Directory Structure
-DRL_agent/: Contains the reinforcement learning agent code.
-GUI/: Frontend code for the graphical user interface.
-LLM_Env/: Implementation of the LLM Translation Engine.
-Monitoring/: Scripts for Prometheus and Grafana integration.
-assurance_module/: Code for monitoring and ensuring system reliability.
-customer_apps/: Sample applications for testing resource orchestration.
-app_deployment.yaml: Kubernetes deployment configuration.
-app_service.yaml: Kubernetes service configuration.
-Monitoring Tools
-Prometheus: Collects metrics for monitoring system performance.
-Grafana: Visualizes metrics for decision-making and troubleshooting.
-Contributions
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd Proactive-Customer-Centric-IBN-LLM-Models-Deep-Reinforcement-Learning-and-Kubernetes
+   ```
+3. Set up the Kubernetes cluster and install Prometheus and Grafana.
+4. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+5. Deploy the application:
+   ```bash
+   kubectl apply -f app_deployment.yaml
+   kubectl apply -f app_service.yaml
+   ```
+
+## Usage
+
+1. Start the application.
+2. Access the GUI to submit user intents.
+3. Monitor the system performance via Grafana dashboards.
+4. Observe the dynamic resource adjustments and system adaptations.
+
+## Directory Structure
+
+- `DRL_agent/`: Contains the reinforcement learning agent code.
+- `GUI/`: Frontend code for the graphical user interface.
+- `LLM_Env/`: Implementation of the LLM Translation Engine.
+- `Monitoring/`: Scripts for Prometheus and Grafana integration.
+- `assurance_module/`: Code for monitoring and ensuring system reliability.
+- `customer_apps/`: Sample applications for testing resource orchestration.
+- `app_deployment.yaml`: Kubernetes deployment configuration.
+- `app_service.yaml`: Kubernetes service configuration.
+
+## Monitoring Tools
+
+- **Prometheus:** Collects metrics for monitoring system performance.
+- **Grafana:** Visualizes metrics for decision-making and troubleshooting.
+
+## Contributions
+
 Contributions are welcome! Please follow these steps:
 
-Fork the repository.
-Create a new branch for your feature or bug fix.
-Commit your changes and push to your branch.
-Submit a pull request.
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Commit your changes and push to your branch.
+4. Submit a pull request.
